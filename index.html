@@ -92,6 +92,8 @@ button:hover{background:var(--lavender); color:#000; box-shadow:0 0 35px var(--l
 .glowChar{color:#fff; text-shadow:0 0 4px #fff,0 0 8px var(--lavender-glow);}
 #nextLineBtn,#exitPoem,#savePoem{margin-top:15px; padding:10px 20px; border-radius:12px; border:1px solid var(--lavender); background:transparent; color:#fff; cursor:pointer; transition:all 0.3s ease;}
 #nextLineBtn:hover,#exitPoem:hover,#savePoem:hover{background:var(--lavender); color:#000; box-shadow:0 0 25px var(--lavender-glow);}
+#poemText.fullPoem{animation:glowPulse 1.5s infinite alternate;}
+@keyframes glowPulse{0%{text-shadow:0 0 10px var(--lavender),0 0 20px var(--lavender-glow);}50%{text-shadow:0 0 18px var(--lavender),0 0 40px var(--lavender-glow);}100%{text-shadow:0 0 10px var(--lavender),0 0 20px var(--lavender-glow);}}
 
 /* MEMORY VIDEO */
 #videoOverlay{position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; justify-content:center; align-items:center; z-index:20; flex-direction:column;}
@@ -211,21 +213,13 @@ const questions = [
   ["Current favorite song","missing you"],
   ["Who sang it?","g-dragon"]
 ];
-let currentQuestion=0;
 
-// Quiz functions
-function openQuiz(){
-  quizOverlay.style.display="flex";
-  currentQuestion=0;
-  showQuestion();
-}
-function showQuestion(){
-  const q=document.getElementById("quizQuestion");
-  q.innerHTML=`${questions[currentQuestion][0]}?`;
-  document.getElementById("quizInput").value="";
-}
-document.getElementById("submitQuiz").onclick=function(){
-  const ans=document.getElementById("quizInput").value.toLowerCase();
+let currentQuestion=0;
+function showQuestion(){quizQuestion.innerText=questions[currentQuestion][0]; quizInput.value="";}
+function openQuiz(){quizOverlay.style.display="flex"; currentQuestion=0; showQuestion(); vipBtn.style.display="none";}
+const quizQuestion=document.getElementById("quizQuestion"); const quizInput=document.getElementById("quizInput"); const submitQuiz=document.getElementById("submitQuiz");
+submitQuiz.onclick=function(){
+  const ans=quizInput.value.toLowerCase();
   if(ans===questions[currentQuestion][1].toLowerCase()){
     currentQuestion++;
     if(currentQuestion>=questions.length){quizOverlay.style.display="none";vipBtn.style.display="inline-block"; confetti(); return;}
@@ -237,7 +231,6 @@ function closeQuiz(){quizOverlay.style.display="none"; vipBtn.style.display="inl
 // Poem Stanza Logic
 const poemStanzas=[
 `Merie did you know? by Keith
-
 Hello you, my soul sister
 It’s me, not your mister
 But I can be your sitter
@@ -259,7 +252,8 @@ You might think it’s a little thing
 But you make life easy, worth living
 You’re a blessing—never passing, forever my sibling`
 ];
-let stanzaIndex=0, lineIndex=0;
+
+let stanzaIndex=0,lineIndex=0;
 function openPoem(){
   poemOverlay.style.display="flex";
   poemText.innerHTML="";
@@ -272,7 +266,8 @@ function nextPoemLine(){
   if(stanzaIndex>=poemStanzas.length){
     nextLineBtn.style.display="none";
     exitPoemBtn.style.display="inline-block";
-    poemText.innerHTML=poemStanzas.join('\n\n'); // show full poem at end
+    poemText.innerHTML=poemStanzas.join('\n\n');
+    poemText.classList.add("fullPoem");
     return;
   }
   const lines = poemStanzas[stanzaIndex].split('\n');
@@ -302,12 +297,44 @@ function nextPoemLine(){
 }
 function closePoem(){poemOverlay.style.display="none"; poemBGM.pause(); poemBGM.currentTime=0;}
 function savePoem(){
-  const blob=new Blob([poemStanzas.join('\n\n')],{type:"text/plain;charset=utf-8"});
-  const link=document.createElement('a');
-  link.href=URL.createObjectURL(blob);
-  link.download="Merie_Poem.txt";
-  link.click();
+    // Create canvas
+    const canvas = document.createElement('canvas');
+    canvas.width = 800;
+    canvas.height = 1000;
+    const ctx = canvas.getContext('2d');
+
+    // Background
+    const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+    gradient.addColorStop(0,'#0a0a0a');
+    gradient.addColorStop(1,'#1c0c3a');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // Text style
+    ctx.font = '24px "Roboto Mono"';
+    ctx.fillStyle = '#c7b9ff';
+    ctx.textAlign = 'center';
+    ctx.shadowColor = '#c7b9ff';
+    ctx.shadowBlur = 20;
+
+    // Draw each stanza
+    let y = 100;
+    poemStanzas.forEach(stanza => {
+        const lines = stanza.split('\n');
+        lines.forEach(line => {
+            ctx.fillText(line, canvas.width/2, y);
+            y += 40;
+        });
+        y += 30; // spacing between stanzas
+    });
+
+    // Convert to image and download
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = 'Merie_Poem.png';
+    link.click();
 }
+
 
 // Confetti
 function confetti(){
