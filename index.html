@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Merie</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Roboto+Mono&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --lavender: #c7b9ff;
+  --lavender-soft: rgba(199,185,255,0.45);
+  --lavender-glow: rgba(199,185,255,0.75);
+}
+
+/* Basic setup */
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+  height:100vh;
+  font-family:'Roboto Mono', monospace;
+  color:#f4f4f8;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(199,185,255,0.15), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(180,160,255,0.12), transparent 45%),
+    linear-gradient(180deg, rgba(0,0,0,0.65), rgba(0,0,0,0.92)),
+    url("https://i.ibb.co/352RD62Y/1747102-76743.jpg");
+  background-size: cover;
+  background-position: center;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  animation: bgPulse 12s ease-in-out infinite alternate;
+}
+
+/* Background pulse */
+@keyframes bgPulse{0%{transform:scale(1);}50%{transform:scale(1.02);}100%{transform:scale(1);}}
+
+/* Particles */
+.particle{position:fixed;width:6px;height:6px;background:var(--lavender);border-radius:50%;opacity:0.5;pointer-events:none;animation: floatParticle linear infinite;}
+@keyframes floatParticle{0%{transform:translateY(0) translateX(0) scale(1); opacity:0.3;}50%{transform:translateY(-250px) translateX(60px) scale(1.4); opacity:0.8;}100%{transform:translateY(0) translateX(0) scale(1); opacity:0.3;}}
+
+/* Floating Neon Shapes */
+.neonShape{position:fixed;border-radius:50%;border:2px solid var(--lavender);width:12px;height:12px;opacity:0.6;animation: neonFloat linear infinite;pointer-events:none;}
+@keyframes neonFloat{0%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-200px) rotate(180deg);}100%{transform:translateY(0) rotate(360deg);}}
+
+/* PASSWORD SCREEN */
+#lockScreen{position:fixed; inset:0; background: radial-gradient(circle,#111,#000); display:flex; justify-content:center; align-items:center; z-index:10;}
+.lock-box{text-align:center; padding:40px; border:1px solid var(--lavender-soft); border-radius:16px; box-shadow:0 0 40px var(--lavender-soft);}
+.lock-box h2{font-family:'Oswald',sans-serif; letter-spacing:3px; color:var(--lavender);}
+.lock-box input{margin-top:20px; padding:12px 18px; border-radius:20px; border:none; outline:none; font-family:inherit; text-align:center;}
+.lock-box button{margin-top:15px; padding:10px 24px; border-radius:20px; border:1px solid var(--lavender); background:transparent; color:var(--lavender); cursor:pointer; transition:all 0.3s ease;}
+.lock-box button:hover{transform:scale(1.1); box-shadow:0 0 35px var(--lavender-glow);}
+
+/* MAIN CONTENT */
+#content{display:none; position:relative; z-index:2;}
+.container{max-width:720px; padding:45px; background:rgba(0,0,0,0.68); border-radius:20px; border:1px solid rgba(255,255,255,0.12); box-shadow:0 0 60px var(--lavender-soft); animation: fadeUp 1.5s ease; position:relative; overflow:hidden; text-align:center;}
+@keyframes fadeUp{from{opacity:0; transform:translateY(25px);}to{opacity:1;}}
+h1{font-family:'Oswald',sans-serif; letter-spacing:4px; font-size:3rem; color:var(--lavender); text-shadow:0 0 14px var(--lavender-soft),0 0 50px var(--lavender); animation:pulseGlow 2.5s infinite alternate; transition:opacity 0.3s;}
+h1:hover{opacity:0;}
+.type{margin-top:25px; border-right:2px solid var(--lavender); white-space:nowrap; overflow:hidden; width:auto; font-size:1.2rem;}
+.controls{text-align:center; margin-top:30px;}
+button{margin:10px 8px; padding:12px 26px; border-radius:25px; border:1px solid var(--lavender); background:transparent; color:#fff; font-family:'Oswald',sans-serif; cursor:pointer; transition:all 0.3s ease;}
+button:hover{background:var(--lavender); color:#000; box-shadow:0 0 35px var(--lavender-glow); transform:scale(1.1) rotate(-2deg);}
+
+/* VINYL */
+.vinyl-orbit{position:relative;margin-top:35px; display:flex; justify-content:center; flex-direction:column; align-items:center;}
+.vinyl{width:150px; height:150px; border-radius:50%; background:radial-gradient(circle,#111 12%,#222 22%,#000 60%); border:5px solid #000; box-shadow:0 0 40px var(--lavender-soft); animation:orbit 10s ease-in-out infinite alternate; animation-play-state:paused; transition:transform 0.3s ease;}
+.vinyl:hover{transform:scale(1.15);}
+.vinyl::after{content:""; width:14px; height:14px; background:var(--lavender); border-radius:50%; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes orbit{from{transform:translateX(-10px);} to{transform:translateX(10px);}}
+
+/* THANK YOU BRO */
+#secret{margin-top:20px; color:var(--lavender); font-size:1.2em; animation:blink 1s infinite; text-shadow:0 0 20px var(--lavender);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* QUIZ & POEM */
+#quizOverlay{position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; justify-content:center; align-items:center; z-index:30; flex-direction:column;}
+.quiz-container{width:600px; max-width:90%; background:rgba(0,0,0,0.85); border-radius:16px; padding:25px; color:#fff; text-align:center; box-shadow:0 0 30px var(--lavender-glow);}
+.quiz-container h2{font-family:'Oswald',sans-serif; margin-bottom:20px; color:var(--lavender); text-shadow:0 0 10px var(--lavender);}
+#quizInput{width:70%; padding:10px 14px; border-radius:12px; border:1px solid var(--lavender); background:transparent; color:#fff; text-align:center; margin-top:15px; font-family:'Roboto Mono';}
+#submitQuiz{margin-top:15px; padding:10px 20px; border-radius:12px; border:1px solid var(--lavender); background:transparent; color:#fff; cursor:pointer; transition:all 0.3s ease;}
+#submitQuiz:hover{background:var(--lavender); color:#000; box-shadow:0 0 30px var(--lavender-glow);}
+#closeQuizBtn{margin-top:15px; background:#fff;color:#000;border:none;border-radius:12px;padding:6px 12px;cursor:pointer;}
+#vipBtn{display:none;margin-top:15px;padding:12px 24px;border-radius:20px;border:1px solid var(--lavender);background:transparent;color:#fff; font-family:'Oswald',sans-serif; cursor:pointer; transition:all 0.3s ease;}
+#vipBtn:hover{background:var(--lavender); color:#000; box-shadow:0 0 30px var(--lavender-glow); transform:scale(1.05);}
+
+/* POEM TERMINAL */
+#poemOverlay{position:fixed; inset:0; display:none; justify-content:center; align-items:center; z-index:40; flex-direction:column; background:rgba(0,0,0,0.95); color:#c7b9ff; font-family:'Roboto Mono', monospace; text-align:center; padding:20px; border:2px solid var(--lavender); border-radius:16px;}
+#poemText{max-width:600px; margin:auto; white-space:pre-wrap; font-size:1.2rem; line-height:1.6;}
+.glowChar{color:#fff; text-shadow:0 0 4px #fff,0 0 8px var(--lavender-glow);}
+#nextLineBtn,#exitPoem,#savePoem{margin-top:15px; padding:10px 20px; border-radius:12px; border:1px solid var(--lavender); background:transparent; color:#fff; cursor:pointer; transition:all 0.3s ease;}
+#nextLineBtn:hover,#exitPoem:hover,#savePoem:hover{background:var(--lavender); color:#000; box-shadow:0 0 25px var(--lavender-glow);}
+
+/* MEMORY VIDEO */
+#videoOverlay{position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; justify-content:center; align-items:center; z-index:20; flex-direction:column;}
+#videoOverlay iframe{width:95%; height:600px; border-radius:14px;}
+#closeVideoBtn{margin-bottom:10px; background:var(--lavender); color:#000; border:none; border-radius:12px; padding:6px 12px; cursor:pointer; z-index:30;}
+
+/* CONFETTI */
+.confetti-piece{position:absolute; width:8px;height:8px; pointer-events:none; transform:rotate(0deg);}
+
+/* SMOKY CURSOR */
+#mouseGlow{position:fixed; width:40px; height:40px; border-radius:50%; background: radial-gradient(circle, rgba(199,185,255,0.3) 0%, rgba(199,185,255,0) 60%); pointer-events:none; transform:translate(-50%,-50%); z-index:9999;}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD -->
+<div id="lockScreen">
+  <div class="lock-box">
+    <h2>ENTER PASSWORD</h2>
+    <p>Hint: latest G-Dragon album</p>
+    <input id="pwInput" type="password">
+    <br>
+    <button onclick="unlock()">ENTER</button>
+  </div>
+</div>
+
+<div id="mouseGlow"></div>
+
+<!-- MAIN CONTENT -->
+<div id="content">
+  <div class="container">
+    <h1>HAPPY BIRTHDAY MERIE!</h1>
+    <p class="type">For the one who always stayed, my best bro.</p>
+    <div class="controls">
+      <button onclick="playMusic()">▶ PLAY MUSIC</button>
+      <button onclick="pauseMusic()">⏸ PAUSE MUSIC</button>
+      <button onclick="tts.play()">🎙 PLAY VOICE</button>
+      <button onclick="openMemory()">💭 MEMORY</button>
+      <button onclick="openQuiz()">🎮 MINI GAME</button>
+      <button id="vipBtn" onclick="openPoem()">V.I.P</button>
+    </div>
+    <div class="vinyl-orbit">
+      <div id="vinyl" class="vinyl"></div>
+      <div id="secret">Thank you for existing bro! 💜</div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO -->
+<div id="videoOverlay">
+  <button id="closeVideoBtn" onclick="closeVideo()">✖ CLOSE VIDEO</button>
+  <iframe id="memoryVideo" src="https://player.vimeo.com/video/1146495056?autoplay=0&muted=0" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+</div>
+
+<!-- QUIZ -->
+<div id="quizOverlay">
+  <div class="quiz-container">
+    <h2>🎵 Music Quiz!</h2>
+    <div id="quizQuestion"></div>
+    <input id="quizInput" placeholder="Type your answer here..." />
+    <button id="submitQuiz">Submit</button>
+    <button id="closeQuizBtn" onclick="closeQuiz()">✖ CLOSE</button>
+  </div>
+</div>
+
+<!-- POEM -->
+<div id="poemOverlay">
+  <div id="poemText"></div>
+  <div>
+    <button id="nextLineBtn" onclick="nextPoemLine()">CONTINUE</button>
+    <button id="savePoem" onclick="savePoem()">💾 SAVE</button>
+    <button id="exitPoem" onclick="closePoem()">EXIT</button>
+  </div>
+</div>
+
+<audio id="bgm" loop src="https://raw.githubusercontent.com/ansolodev/hbd-bro/54b7e45c91877eda4872218c0dfc4a741f258f6b/Modern%20English%20-%20I%20Melt%20With%20You%20(Official%20Video).mp3"></audio>
+<audio id="tts" src="https://raw.githubusercontent.com/ansolodev/hbd-bro/4df265c35d271876e25c067e4fb6cda864434029/ElevenLabs_2025-12-15T02_58_28_Chris_pre_sp100_s50_sb75_v3.mp3"></audio>
+<audio id="poemBGM" src="https://raw.githubusercontent.com/ansolodev/hbd-bro/54b7e45c91877eda4872218c0dfc4a741f258f6b/G-Dragon%20-%20Missing%20You%20Lyrics.mp3"></audio>
+
+<script>
+// Particles
+for(let i=0;i<40;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'vw';p.style.top=Math.random()*100+'vh';p.style.animationDuration=3+Math.random()*5+'s';document.body.appendChild(p);}
+for(let i=0;i<25;i++){const s=document.createElement('div');s.className='neonShape';s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*100+'vh';s.style.width=(6+Math.random()*10)+'px';s.style.height=s.style.width;s.style.animationDuration=(3+Math.random()*6)+'s';document.body.appendChild(s);}
+
+// Unlock
+function unlock(){if(pwInput.value==="ubermensch"){lockScreen.style.display="none";content.style.display="block";}else alert("nope 💜");}
+
+// Music
+const bgm=document.getElementById("bgm"); const vinyl=document.getElementById("vinyl");
+function playMusic(){bgm.play();vinyl.style.animation=`spin 6s linear infinite, orbit 10s ease-in-out infinite alternate`;}
+function pauseMusic(){bgm.pause();}
+
+// Memory Video
+const overlay=document.getElementById("videoOverlay"); const secret=document.getElementById("secret");
+function openMemory(){overlay.style.display="flex";secret.style.display="none";const iframe=document.getElementById("memoryVideo");iframe.src = iframe.src.replace('autoplay=0','autoplay=1');}
+function closeVideo(){overlay.style.display="none";secret.style.display="block";const iframe=document.getElementById("memoryVideo");iframe.src = iframe.src.replace('autoplay=1','autoplay=0');}
+
+// Ghost Cursor
+const glow=document.getElementById("mouseGlow");
+document.addEventListener("mousemove",e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';});
+
+// Quiz & Poem
+const quizOverlay=document.getElementById("quizOverlay");
+const vipBtn=document.getElementById("vipBtn");
+const poemOverlay=document.getElementById("poemOverlay");
+const poemText=document.getElementById("poemText");
+const nextLineBtn=document.getElementById("nextLineBtn");
+const exitPoemBtn=document.getElementById("exitPoem");
+const savePoemBtn=document.getElementById("savePoem");
+const poemBGM=document.getElementById("poemBGM");
+
+const questions = [
+  ["Favorite duet song","need you now"],
+  ["Favorite The Script song","rain"],
+  ["Your winner ringtone 2014","sentimental"],
+  ["Favorite tagalog duet","+63"],
+  ["Current favorite song","missing you"],
+  ["Who sang it?","g-dragon"]
+];
+let currentQuestion=0;
+
+// Quiz functions
+function openQuiz(){
+  quizOverlay.style.display="flex";
+  currentQuestion=0;
+  showQuestion();
+}
+function showQuestion(){
+  const q=document.getElementById("quizQuestion");
+  q.innerHTML=`${questions[currentQuestion][0]}?`;
+  document.getElementById("quizInput").value="";
+}
+document.getElementById("submitQuiz").onclick=function(){
+  const ans=document.getElementById("quizInput").value.toLowerCase();
+  if(ans===questions[currentQuestion][1].toLowerCase()){
+    currentQuestion++;
+    if(currentQuestion>=questions.length){quizOverlay.style.display="none";vipBtn.style.display="inline-block"; confetti(); return;}
+    showQuestion();
+  }else{alert("Try again 😎");}
+};
+function closeQuiz(){quizOverlay.style.display="none"; vipBtn.style.display="inline-block";}
+
+// Poem Stanza Logic
+const poemStanzas=[
+`Merie did you know? by Keith
+
+Hello you, my soul sister
+It’s me, not your mister
+But I can be your sitter
+Someone who stays, who sits with her`,
+`You are my favorite bro
+Stop, look, and listen—don’t go
+Please be healthy, let’s grow
+Look at you now, you glow`,
+`Boomerang, no matter how far you go
+We always find each other, you know
+Wherever you are, whatever you are
+Please know—you’re one of my stars`,
+`We may sometimes clash
+But we never let it crash
+’Cause we love each other, no fuss
+We always find a way to say “yes”`,
+`So thank you, bro, for everything
+You might think it’s a little thing
+But you make life easy, worth living
+You’re a blessing—never passing, forever my sibling`
+];
+let stanzaIndex=0, lineIndex=0;
+function openPoem(){
+  poemOverlay.style.display="flex";
+  poemText.innerHTML="";
+  nextLineBtn.style.display="inline-block";
+  exitPoemBtn.style.display="none";
+  stanzaIndex=0; lineIndex=0;
+  poemBGM.play();
+}
+function nextPoemLine(){
+  if(stanzaIndex>=poemStanzas.length){
+    nextLineBtn.style.display="none";
+    exitPoemBtn.style.display="inline-block";
+    poemText.innerHTML=poemStanzas.join('\n\n'); // show full poem at end
+    return;
+  }
+  const lines = poemStanzas[stanzaIndex].split('\n');
+  poemText.innerHTML="";
+  lineIndex=0;
+  function typeLine(){
+    if(lineIndex<lines.length){
+      let line=lines[lineIndex]; let charI=0;
+      function typeChar(){
+        if(charI<line.length){
+          const span=document.createElement("span");
+          span.textContent=line.charAt(charI);
+          span.className="glowChar";
+          poemText.appendChild(span);
+          charI++;
+          setTimeout(typeChar,50);
+        }else{
+          poemText.appendChild(document.createElement("br"));
+          lineIndex++;
+          setTimeout(typeLine,200);
+        }
+      }
+      typeChar();
+    }else{stanzaIndex++;}
+  }
+  typeLine();
+}
+function closePoem(){poemOverlay.style.display="none"; poemBGM.pause(); poemBGM.currentTime=0;}
+function savePoem(){
+  const blob=new Blob([poemStanzas.join('\n\n')],{type:"text/plain;charset=utf-8"});
+  const link=document.createElement('a');
+  link.href=URL.createObjectURL(blob);
+  link.download="Merie_Poem.txt";
+  link.click();
+}
+
+// Confetti
+function confetti(){
+  for(let i=0;i<150;i++){
+    const c=document.createElement("div"); c.className="confetti-piece";
+    c.style.background=["#c7b9ff","#fff","#ffb6c1","#8a2be2"][Math.floor(Math.random()*4)];
+    c.style.left=Math.random()*100+"vw"; c.style.top=Math.random()*-20+"px";
+    c.style.width=c.style.height=Math.random()*8+4+"px";
+    document.body.appendChild(c);
+    (function(c){
+      let fall=Math.random()*5+2;
+      let rot=Math.random()*360;
+      let id=setInterval(()=>{
+        let top=parseFloat(c.style.top); c.style.top=top+fall+"px";
+        rot+=10; c.style.transform=`rotate(${rot}deg)`;
+        if(top>window.innerHeight){clearInterval(id); c.remove();}
+      },16);
+    })(c);
+  }
+}
+</script>
+</body>
+</html>
